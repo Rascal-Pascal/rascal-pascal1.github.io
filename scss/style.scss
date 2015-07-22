@@ -1,0 +1,512 @@
+$link: #000;
+$white: #fff8fa;
+$dark: #000;
+
+$transition: 0.3s ease all;
+
+$lrg-bp: 1280px;
+$med-bp: 1024px;
+$sm-bp: 790px;
+
+
+@mixin vendorize($property, $value) {
+  -webkit-#{$property}: $value;
+  -moz-#{$property}: $value;
+  -ms-#{$property}: $value;
+  -o-#{$property}: $value;
+  #{$property}: $value;
+}
+
+@mixin coverbg($url) {
+  background: url($url) no-repeat center center fixed #FFF;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+@mixin selection($background, $color) {
+  ::selection {background: $background; color: $color;}
+  ::-moz-selection {background: $background;color: $color;}
+}
+
+@include selection ($link, white);
+
+@mixin resetUL{
+  @include vendorize(margin-before, 0);
+  @include vendorize(margin-after, 0);
+  @include vendorize(margin-start, 0);
+  @include vendorize(margin-end, 0);
+  @include vendorize(padding-start, 0);
+  list-style-type: none;
+}
+
+
+@mixin opacity($value){
+  $IEValue: $value*100;
+  opacity: $value;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity="+$IEValue+")";
+  filter: alpha(opacity=$IEValue);
+}
+
+
+@mixin opacityhover($base) {
+  @include opacity($base);
+  @include vendorize(transition, $transition);
+  &:hover {
+    opacity: 1;
+  }
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+
+}
+
+@mixin noborderhover() {
+  border: none;
+  &:hover {
+    border: none;
+  }
+}
+
+@mixin removelinkunderlines {
+  margin-bottom: 0;
+  border-bottom: 0;
+  &:hover {
+    border-bottom: none;
+  }
+}
+
+
+
+// general
+
+ul, dd {
+  @include resetUL;
+}
+
+button {
+  border: none;
+  background: none;
+}
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+    border: none;
+}
+button:focus {
+  outline: none;
+}
+
+
+
+// typography
+
+body {
+  font-family: "Suisse BP Int'l",helvetica, arial, sans-serif;
+  font-weight: 700;
+  font-size: 23px;
+  line-height: 22px;
+  letter-spacing: 0.01em;
+  background: $white;
+
+  @media screen and (max-width: $lrg-bp) {
+    font-size: 95%;
+    line-height: 85%;
+  }
+
+  @media screen and (max-width: $med-bp) {
+    font-size: 100%;
+    line-height: 90%;
+  }
+
+}
+
+dt, a { // invisible border so hover works 
+  // border-bottom: 4px solid $white;
+  margin-top: 2px;
+}
+
+a {
+  color: $link;
+  text-decoration: none;
+  display: inline-block;
+  // margin-bottom: 2px;
+
+  // fake margin so appearance of hover border doesn't affect position
+  margin-bottom: 4px;
+
+  &:hover {
+    border-bottom: 4px solid $link;
+    margin-bottom: 0;
+  }
+}
+
+
+.contact a {
+  @include removelinkunderlines;
+}
+
+
+.project-wrapper a {
+  border-bottom: 4px solid $link;
+}
+
+
+
+h1, h2, p {
+  font-size: 1em; 
+  margin: 0;
+  font-weight: 700;
+}
+
+strong {
+  font-weight: inherit;
+  text-transform: uppercase; 
+}
+
+
+
+// accordion
+#project-links {
+  dt {
+    cursor: pointer;
+  }
+
+  .open {
+    & + dd {
+      display: block;
+    }
+
+    &:before {
+      content: ("- ");
+    }
+  }
+
+  .closed {
+    & + dd {
+      display: none;
+    }
+    &:before {
+      content: ("+ ");
+    }
+  }
+
+}
+
+
+
+
+// spacing & position & grid
+// everythings fixed :)
+
+$spacer: 50px;
+$spacer-top: 140px;
+
+header, .news, .imprint, .contact {
+  position: fixed;
+}
+
+header, .news {
+  top: $spacer;
+}
+
+.imprint, .contact {
+  bottom: $spacer;
+}
+
+header, .contact {
+  left: $spacer;
+}
+
+.news, .imprint {
+  right: $spacer;
+}
+
+
+header {
+  .bio {
+    width: 260px;
+  }
+}
+
+
+
+
+.projects {
+  position: relative;
+  top: $spacer-top;
+
+  .accordion-wrapper, .thumbnails-wrapper {
+    display: inline-block;
+  }
+
+  .thumbnails-wrapper {
+    top: 0;
+    position: absolute;
+    img {
+      max-width: 30%;
+      padding-left: 5%;
+    }
+  }
+
+  .accordion-wrapper {
+    width: 480px; // diff from design specs!
+    padding-left: 320px;
+
+    @media screen and (max-width: $lrg-bp) {
+      padding-left: 220px;
+
+    }
+
+    z-index: 10000;
+    position: relative;
+
+
+    dt {
+      border: none;
+      margin-bottom: 5px;
+    }
+
+
+    h2 {
+      margin-bottom: $spacer/2;
+
+    }
+
+    // background
+    h2, dd ul li a {
+      display: inline-block;
+    }
+
+
+
+  }
+
+
+}
+
+
+
+// news & twitter widget
+
+.news {
+  z-index: 10000;
+  h2 {
+    cursor: pointer;
+  }
+}
+
+.twitter-widget {
+  position: absolute;
+  width: 360px;
+  // height: 500px; // fake for now
+  top: $spacer-top;
+  right: $spacer;
+  z-index: 10000;
+  h2 a {
+    @include noborderhover;
+  }
+}
+
+#twitter_feed {
+  p {
+    margin-top: $spacer/5;  
+    overflow-wrap: break-word;
+    line-height: 1.1em;
+    &:before {
+      content: "+ ";
+    }
+  }
+}
+
+
+
+// things aren't fixed in mobile
+
+@media screen and (max-width: 1024px) {
+
+  .projects {
+    .thumbnails-wrapper {
+      display: none !important;
+    }
+  }
+
+
+
+  header, .news, .imprint, .contact, .projects {
+    position: relative;
+    float: left;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: 15px 0 5px 50px;
+  }
+
+  .twitter-widget, .news {
+    display: none;
+  }
+
+  .projects {
+
+    .accordion-wrapper {
+      padding-left: 0;
+    }
+  }
+
+}
+
+
+
+
+
+
+// project page
+
+.project-wrapper {
+  margin-top: 50px;
+
+  .project-info, .project-slideshow, .close {
+    display: inline-block;
+    position: absolute;
+  }
+
+  .project-info {
+    left: 110px;
+
+    width: 410px;
+
+    & div {
+      margin-bottom: 25px;
+    }
+
+    .project-year {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .project-description {
+      p {
+        margin-bottom: $spacer/2;
+      }
+    }
+  }
+
+
+
+  .close {
+    right: 110px;
+    z-index: 10000;
+    a {
+      padding: 0 0 22px 22px;
+      @include noborderhover;
+    }
+  }
+
+  .project-slideshow {
+    right: 110px;
+    // width: 900px;
+    max-width: 50%;
+    @media screen and (max-width: $lrg-bp) {
+      max-width: 40%;
+    }
+
+    @media screen and (max-width: $med-bp) {
+      max-width: 80%;
+    }
+
+
+    top: 105px;
+
+    div img {
+      max-width: 100%;
+    }
+
+    ul {
+      margin-top: -20px;
+      position: absolute;
+
+      li {
+        background: $white;
+        display: inline-block;
+        button:hover {
+          border-bottom: 4px solid $dark;
+          margin-bottom: -2px;
+        }
+      }
+    }
+  }
+
+}
+
+
+// mobile 
+
+  $mobile-spacer: 75px;
+  @media screen and (max-width: $med-bp) {
+    .project-wrapper {
+      position: relative;
+
+      .project-info, .project-slideshow {
+        display: inline-block;
+        position: relative;
+        margin-left: $mobile-spacer;
+        left: 0;
+      }    
+
+      
+
+    }
+
+  }
+
+
+
+
+// imprint page
+
+.imprint-wrapper {
+    position: relative;
+    top: 50px;
+    width: 480px; // diff from design specs!
+    padding-left: 420px;
+
+    p {
+      margin-bottom: $spacer/2;
+    }
+
+    .close {
+      position: fixed;
+      top: 50px;
+      right: 50px;
+      a {@include removelinkunderlines;}
+    }
+}
+
+
+div#pageloader {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  bottom: 0%;
+  left: 0;
+  right: 0%;
+  background-color: $white;
+  z-index: 1000000;
+
+  // display: none;
+
+  img {
+    margin: 25% 0 0 45%;
+  }
+}
+
+
+
+
